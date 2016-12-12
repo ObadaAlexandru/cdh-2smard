@@ -1,0 +1,36 @@
+- name: Configure moveii development environment
+  hosts: all
+  gather_facts: True
+  vars:
+    cdh_utilities_repo: git@gitlab.lrz.de:move-ii/cdh_utilities.git
+    cdh_utilities: "{{ ansible_env.HOME }}/cdh_utilities"
+  tasks:
+    - name: Install tools
+      become: True
+      apt:
+        name: "{{ item }}"
+        update_cache: True
+      with_items:
+        - make
+        - python-pip
+        - git
+        - build-essential
+        - cmake
+
+    - name: Checkout utilities
+      git:
+          accept_hostkey: true
+          version: master
+          ssh_opts: -o StrictHostKeyChecking=no
+          repo: "{{ cdh_utilities_repo }}"
+          dest: "{{ cdh_utilities }}"
+
+    - name: Clone all
+      shell: cdh_utilities/clone_all.sh
+      args:
+        chdir: "{{ ansible_env.HOME }}"
+
+    - name: Make all
+      shell: cdh_utilities/make_linux.sh
+      args:
+        chdir: "{{ ansible_env.HOME }}"

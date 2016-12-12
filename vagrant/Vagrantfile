@@ -1,0 +1,15 @@
+VAGRANTFILE_API_VERSION = "2"
+Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
+  config.vm.define "vagrant" do |vagrant|
+    vagrant.vm.box = "ubuntu/xenial64"
+  end
+  config.vm.synced_folder "../", "/2smard"
+  config.ssh.forward_agent = true
+  config.vm.provision "shell" do |s|
+    s.inline = "apt-get install -y python"
+  end
+
+  config.vm.provision "ansible" do |ansible|
+    ansible.playbook = "playbook.yaml"
+  end
+end
