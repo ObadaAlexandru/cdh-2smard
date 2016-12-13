@@ -1,3 +1,7 @@
 #Vagrant
 *.log
 .vagrant
+
+
+#Build artifacts
+build
