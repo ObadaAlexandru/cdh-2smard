@@ -3,13 +3,12 @@
 
 class SequenceItem {
 public:
-  SequenceItem(int period);
-  SequenceItem(int period, bool active);
+  SequenceItem(long period);
+  SequenceItem(long period, bool active);
   bool isActive();
-  int getPeriod();
+  long getPeriod();
 private:
-  int period;
+  long period;
   bool active;
 };
-
 #endif
