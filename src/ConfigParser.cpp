@@ -6,6 +6,11 @@
 
 using namespace std;
 
+const string ConfigParser::halfOneKey = "half_1";
+const string ConfigParser::halfTwoKey = "half_2";
+const string ConfigParser::pinKeyHalfOne = "pin_half_1";
+const string ConfigParser::pinKeyHalfTwo = "pin_half_2";
+
 ConfigParser::ConfigParser(string configPath) {
     regex commentRegex("(#).*");
     ifstream configFile;
@@ -30,11 +35,15 @@ ConfigParser::ConfigParser(string configPath) {
 }
 
 std::pair<std::string, std::string> ConfigParser::getSequences() {
-    if(properties.count(half_1) != 1 || properties.count(half_2) != 1) {
-        cerr << "Inconsistent configuration" << endl;
-        //TODO if sequences don't exist Throw exception
+    if(properties.count(halfOneKey) != 1) {
+      cout << "Fallback to default sequence 1\n";
+      properties[halfOneKey] = defaultSequenceHalfOne;
     }
-    return std::make_pair (properties[half_1], properties[half_2]);;
+    if(properties.count(halfTwoKey) != 1) {
+      cout << "Fallback to default sequence 2\n";
+      properties[halfTwoKey] = defaultSequenceHalfTwo;
+    }
+    return make_pair (properties[halfOneKey], properties[halfTwoKey]);
 }
 
 std::map<string, string> ConfigParser::getConfigs() {

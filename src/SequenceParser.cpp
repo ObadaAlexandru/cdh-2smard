@@ -16,12 +16,13 @@ list<SequenceItem> SequenceParser::getSequenceFromString(string sequenceString) 
 SequenceItem SequenceParser::tokenToSequenceItem(string token) {
     regex itemRegex("(A|I)[0-9]*[sm]");
     if (regex_match (token, itemRegex)) {
-        bool active = token.compare(0, 1, "A");
+        bool active = token.at(0) == 'A';
         int period = stoll(token.substr(1, token.size() - 1));
+        char timeUnit = token.at(token.size() - 1);
         /**
           If the time unit is minute, convert to seconds
         **/
-        period = token.compare(token.size() - 1, token.size(), "m") ? period * 60 : period;
+        period = (timeUnit == 'm') ? period * 60 : period;
         return SequenceItem(period, active);
     } else {
         /**
