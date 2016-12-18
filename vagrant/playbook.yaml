@@ -16,6 +16,7 @@
         - git
         - build-essential
         - cmake
+        - libsystemd-dev
 
     - name: Checkout utilities
       git:

@@ -28,8 +28,7 @@ SequenceItem SequenceParser::tokenToSequenceItem(string token) {
         /**
           The provided sequence is invalid
         **/
-        cerr << "invalid Token="<<token<<"\n";
-        //TODO Throw exception here
-        return NULL;
+        cerr << "Invalid token="<<token<<"\n";
+        throw "Invalid token";
     }
 }

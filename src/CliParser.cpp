@@ -20,7 +20,7 @@ map<string, string> CliParser::getArguments(int argc, const char* argv[]) {
     if(tokens.size() != 2) {
       cerr << "Invalid argument "<<argv[i]<<"\n";
       printUsage();
-      //TODO Throw exception
+      throw "Invalid argument";
     } else {
       arguments[tokens[0]] = tokens[1];
     }

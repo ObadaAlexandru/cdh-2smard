@@ -17,9 +17,15 @@ add_executable(2smard
 	src/Tokenizer.cpp
 	src/CliParser.cpp
 	src/SequenceRunner.cpp
+	src/EPSCaller.cpp
 )
 target_include_directories(2smard PUBLIC include/)
-target_link_libraries(2smard ${MOVEIO_LIBRARY})
+target_link_libraries(2smard ${MOVEIO_LIBRARY}
+	systemd
+)
+# target_link_libraries(testADCS
+# 	systemd
+# )
 
 install(TARGETS 2smard
         RUNTIME DESTINATION bin)

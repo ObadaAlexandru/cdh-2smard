@@ -8,6 +8,8 @@
 #include <utility>
 #include <csignal>
 
+
+
 using namespace std;
 
 #define DEFAULT_CONFIG_PATH "./config.cfg"
@@ -56,18 +58,24 @@ pair<list<SequenceItem>, list<SequenceItem>> getSequences(ConfigParser &configPa
 		return make_pair(sequenceParser.getSequenceFromString(sequences.first), sequenceParser.getSequenceFromString(sequences.second));
 }
 
-int main(int argc, const char* argv[])
-{
+void run(int argc, const char* argv[]) {
 		signal(SIGINT, signalHandler);
 		signal(SIGTERM, signalHandler);
 		map<string, string> cliArguments = getCliArguments(argc, argv);
 		string configPath = getConfigFilePath(cliArguments);
 		ConfigParser configParser(configPath);
 		pair<list<SequenceItem>, list<SequenceItem>> sequencePair = getSequences(configParser, cliArguments);
-		cout << "config path =====> " << configPath << endl;
 		map<string, string> configs = configParser.getConfigs();
-
 		SequenceRunner sequenceRunner(sequencePair, configs[ConfigParser::pinKeyHalfOne], configs[ConfigParser::pinKeyHalfTwo]);
-		sequenceRunner.run();
-		return 0;
+		sequenceRunner.runEPS();
+}
+
+int main(int argc, const char* argv[])
+{
+		try {
+			run(argc, argv);
+			return 0;
+		} catch(const char* msg) {
+			cerr << msg << "\n";
+		}
 }

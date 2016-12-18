@@ -4,8 +4,8 @@
 #include "SequenceItem.h"
 #include "Tokenizer.h"
 
-#include<string>
-#include<list>
+#include <string>
+#include <list>
 
 class SequenceParser {
 public:

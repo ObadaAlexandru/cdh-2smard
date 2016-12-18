@@ -2,20 +2,28 @@
 #define SEQUENCERUNNER_H
 
 #include "SequenceItem.h"
+#include "EPSCaller.h"
 
-
-#include <moveio/GPIOPin.h>
 #include <list>
 #include <string>
+#include <pthread.h>
+
+#include <moveio/GPIOPin.h>
 
 class SequenceRunner {
 public:
-  struct RunnerData {
+  struct RunnerDataEPS {
       std::list<SequenceItem> sequence;
-      GPIOPin pin;
+      EPSCaller eps;
+      pthread_mutex_t *mutex;
+  };
+  struct RunnerDataGPIO {
+    std::list<SequenceItem> sequence;
+    GPIOPin pin;
   };
   SequenceRunner(std::pair<std::list<SequenceItem>, std::list<SequenceItem>> sequences, std::string pinKeyHalfOne, std::string pinKeyHalfTwo);
-  void run();
+  void runGPIO();
+  void runEPS();
   static void stopRun();
   static bool isStop();
 private:

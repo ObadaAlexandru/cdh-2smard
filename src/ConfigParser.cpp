@@ -22,7 +22,7 @@ ConfigParser::ConfigParser(string configPath) {
               vector<string> tokens = tokenizer.tokenize(line, "=");
               if(tokens.size() != 2) {
                   cerr << "Invalid config line: " << line << endl;
-                  //TODO Throw exception
+                  throw "Invalid config line";
               }
               cout << "Property[" << tokens[0] << "] = " << tokens[1] << endl;
               properties[tokens[0]] = tokens[1];
