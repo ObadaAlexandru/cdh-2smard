@@ -29,15 +29,3 @@ private:
   const std::string signature = "y";
 };
 #endif
-
-/* Issue the method call and store the respons message in m */
-      //  r = sd_bus_call_method(bus,
-      //                         "org.freedesktop.systemd1",           /* service to contact */
-      //                         "/org/freedesktop/systemd1",          /* object path */
-      //                         "org.freedesktop.systemd1.Manager",   /* interface name */
-      //                         "StartUnit",                          /* method name */
-      //                         &error,                               /* object to return error in */
-      //                         &m,                                   /* return message on success */
-      //                         "ss",                                 /* input signature */
-      //                         "cups.service",                       /* first argument */
-      //                         "replace");                           /* second argument */
