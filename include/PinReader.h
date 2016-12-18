@@ -11,7 +11,6 @@ public:
   PinReader(std::string pinKey);
   bool readStatus();
 private:
-  GPIOPin getPin(std::string pinKey);
   std::string pinId;
 };
 #endif

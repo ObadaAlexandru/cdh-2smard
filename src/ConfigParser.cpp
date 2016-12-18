@@ -10,6 +10,8 @@ const string ConfigParser::halfOneKey = "half_1";
 const string ConfigParser::halfTwoKey = "half_2";
 const string ConfigParser::pinKeyHalfOne = "pin_half_1";
 const string ConfigParser::pinKeyHalfTwo = "pin_half_2";
+const string ConfigParser::pinKeyHalfOneActivation = "activation_pin_half_1";
+const string ConfigParser::pinKeyHalfTwoActivation = "activation_pin_half_2";
 
 ConfigParser::ConfigParser(string configPath) {
     regex commentRegex("(#).*");

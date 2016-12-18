@@ -17,6 +17,8 @@ public:
   static const std::string halfTwoKey;
   static const std::string pinKeyHalfOne;
   static const std::string pinKeyHalfTwo;
+  static const std::string pinKeyHalfOneActivation;
+  static const std::string pinKeyHalfTwoActivation;
 private:
   Tokenizer tokenizer;
   std::map<std::string, std::string> properties;

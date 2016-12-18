@@ -12,14 +12,9 @@ PinReader::PinReader(string pinKey) {
     cout << "Using pin " << pinId <<"\n";
 }
 
-GPIOPin PinReader::getPin(string pinId) {
+bool PinReader::readStatus() {
     GPIOPin pin(pinId);
     pin.setDirection(GPIOPin::INPUT);
-    return pin;
-}
-
-bool PinReader::readStatus() {
-    GPIOPin pin = getPin(pinId);
     if(pin.isOK()) {
       throw "Not possible to read pin " + pinId;
      }
