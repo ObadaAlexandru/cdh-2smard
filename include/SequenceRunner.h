@@ -12,26 +12,18 @@
 
 class SequenceRunner {
 public:
-  struct RunnerDataEPS {
+  struct RunnerData {
       std::list<SequenceItem> sequence;
-      EPSCaller eps;
+      EPSCaller::HALF half;
       pthread_mutex_t *mutex;
   };
-  struct RunnerDataGPIO {
-    std::list<SequenceItem> sequence;
-    GPIOPin pin;
-  };
-  SequenceRunner(std::pair<std::list<SequenceItem>, std::list<SequenceItem>> sequences, std::string pinKeyHalfOne, std::string pinKeyHalfTwo);
-  void runGPIO();
-  void runEPS();
+  SequenceRunner(std::pair<std::list<SequenceItem>, std::list<SequenceItem>> sequences);
+  void run();
   static void stopRun();
   static bool isStop();
 private:
   void tearDown();
-  GPIOPin getPin(std::string pinKey);
   static volatile bool stop;
-  std::string pinKeyHalfOne;
-  std::string pinKeyHalfTwo;
   std::list<SequenceItem> halfOneSequence;
   std::list<SequenceItem> halfTwoSequence;
 };

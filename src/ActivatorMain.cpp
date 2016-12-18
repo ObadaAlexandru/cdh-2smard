@@ -1,8 +1,8 @@
 #include "SequenceParser.h"
 #include "ConfigParser.h"
-#include "Tokenizer.h"
 #include "CliParser.h"
 #include "SequenceRunner.h"
+#include "Utility.h"
 
 #include <iostream>
 #include <utility>
@@ -14,31 +14,10 @@ using namespace std;
 
 #define DEFAULT_CONFIG_PATH "./config.cfg"
 
-void printSequence(list<SequenceItem> sequence) {
-	for(SequenceItem item: sequence) {
-		cout << item.getPeriod() << endl;
-	}
-}
-
-map<string, string> getCliArguments(int argc, const char* argv[]) {
-		CliParser cliParser;
-		map<string, string> cliArguments;
-		if(argc > 1) {
-			cout << "Command line arguments provided\n";
-			cliArguments = cliParser.getArguments(argc, argv);
-		}
-		return cliArguments;
-}
-
-string getConfigFilePath(const map<string, string> &cliArguments) {
-		if(cliArguments.count(CliParser::configPathKey) != 0) {
-				return cliArguments.find(CliParser::configPathKey)->second;
-		}
-		return DEFAULT_CONFIG_PATH;
-}
-
 void signalHandler(int signal) {
-		cout<< "Shutting down ..."<<signal<<endl;
+		cout << "\n================== EXECUTION INTERRUPTED ==================\n";
+		cout << "Received signal = "<<signal<<endl;
+		cout << "2SMARD will be deactivated\n";
 		SequenceRunner::stopRun();
 }
 
@@ -61,13 +40,13 @@ pair<list<SequenceItem>, list<SequenceItem>> getSequences(ConfigParser &configPa
 void run(int argc, const char* argv[]) {
 		signal(SIGINT, signalHandler);
 		signal(SIGTERM, signalHandler);
-		map<string, string> cliArguments = getCliArguments(argc, argv);
-		string configPath = getConfigFilePath(cliArguments);
+		map<string, string> cliArguments = Utility::getCliArguments(argc, argv);
+		string configPath = Utility::getConfigFilePath(cliArguments);
 		ConfigParser configParser(configPath);
 		pair<list<SequenceItem>, list<SequenceItem>> sequencePair = getSequences(configParser, cliArguments);
 		map<string, string> configs = configParser.getConfigs();
-		SequenceRunner sequenceRunner(sequencePair, configs[ConfigParser::pinKeyHalfOne], configs[ConfigParser::pinKeyHalfTwo]);
-		sequenceRunner.runEPS();
+		SequenceRunner sequenceRunner(sequencePair);
+		sequenceRunner.run();
 }
 
 int main(int argc, const char* argv[])

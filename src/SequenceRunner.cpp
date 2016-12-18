@@ -1,7 +1,6 @@
 #include "SequenceRunner.h"
 #include "EPSCaller.h"
 
-// #include <pthread.h>
 #include <iostream>
 #include <unistd.h>
 #include <chrono>
@@ -14,54 +13,36 @@ using namespace std;
 
 volatile bool SequenceRunner::stop = false;
 
-SequenceRunner::SequenceRunner(pair<list<SequenceItem> ,list<SequenceItem>> sequences, string pinKeyHalfOne, string pinKeyHalfTwo) {
+SequenceRunner::SequenceRunner(pair<list<SequenceItem> ,list<SequenceItem>> sequences) {
     this->halfOneSequence = sequences.first;
     this->halfTwoSequence = sequences.second;
-    this->pinKeyHalfOne = pinKeyHalfOne;
-    this->pinKeyHalfTwo = pinKeyHalfTwo;
 }
 
 void* runSequenceEPS(void *ptr) {
-    SequenceRunner::RunnerDataEPS *data = (SequenceRunner::RunnerDataEPS*) ptr;
-    data->eps.open();
+    SequenceRunner::RunnerData *data = (SequenceRunner::RunnerData*) ptr;
+    EPSCaller epsCaller(data->half);
+    epsCaller.open();
     for(SequenceItem item : data->sequence) {
         auto start_time = std::chrono::high_resolution_clock::now();
         pthread_mutex_lock(data->mutex);
         if(item.isActive()) {
             cout<<"Send active"<<endl;
-            data->eps.activate();
+            epsCaller.activate();
         } else {
-            cout<<"send inactive"<<endl;
-            data->eps.deactivate();
+            cout<<"Send inactive"<<endl;
+            epsCaller.deactivate();
         }
         pthread_mutex_unlock(data->mutex);
         // TODO refactore: use conditional variables and listen on events
         while(item.getPeriod() > chrono::duration_cast<chrono::seconds>(chrono::high_resolution_clock::now() - start_time).count()) {
           usleep(100000);
           if(SequenceRunner::isStop()) {
-            cout << "Sequence run has been interrupted\n";
+            epsCaller.close();
             return NULL;
           }
         }
     }
-    return NULL;
-}
-
-void* runSequenceGPIO(void *ptr) {
-    SequenceRunner::RunnerDataGPIO *data = (SequenceRunner::RunnerDataGPIO*) ptr;
-    for(SequenceItem item : data->sequence) {
-        auto start_time = std::chrono::high_resolution_clock::now();
-        cout << "Set pin to " << item.isActive() << " for " << item.getPeriod() << " seconds\n";
-        data->pin.setPin(item.isActive());
-        // TODO refactore: use conditional variables and listen on events
-        while(item.getPeriod() > chrono::duration_cast<chrono::seconds>(chrono::high_resolution_clock::now() - start_time).count()) {
-          usleep(100000);
-          if(SequenceRunner::isStop()) {
-            cout << "Sequence run has been interrupted\n";
-            return NULL;
-          }
-        }
-    }
+    epsCaller.close();
     return NULL;
 }
 
@@ -74,66 +55,30 @@ void SequenceRunner::stopRun() {
 }
 
 void SequenceRunner::tearDown() {
-    cout<<"Tear down"<<endl;
+    cout << "================== 2SMARD Deactivation routine ============\n";
     EPSCaller callerHalfOne(EPSCaller::HALF_ONE);
     EPSCaller callerHalfTwo(EPSCaller::HALF_TWO);
+    auto printFunc = [](int halfId) {cout << "Deactivating 2SMARD half " << halfId << endl;};
     callerHalfOne.open();
     callerHalfTwo.open();
+    printFunc(1);
     callerHalfOne.deactivate();
+    printFunc(2);
     callerHalfTwo.deactivate();
     callerHalfOne.close();
     callerHalfTwo.close();
 }
 
-GPIOPin SequenceRunner::getPin(string pinKey) {
-    string pinId = PinMapper::find(pinKey);
-    std::cout << "Pin id ===== > " <<pinId<< '\n';
-    GPIOPin pin(pinId);
-    pin.setDirection(GPIOPin::OUTPUT);
-    return pin;
-}
-
-void SequenceRunner::runEPS() {
-    EPSCaller callerHalfOne(EPSCaller::HALF_ONE);
-    EPSCaller callerHalfTwo(EPSCaller::HALF_TWO);
+void SequenceRunner::run() {
+    cout << "================== Sequence execution =====================\n";
     pthread_mutex_t mutex;
     pthread_mutex_init(&mutex, NULL);
-    RunnerDataEPS halfOne = {halfOneSequence, callerHalfOne, &mutex};
-    RunnerDataEPS halfTwo = {halfTwoSequence, callerHalfTwo, &mutex};
+    RunnerData halfOne = {halfOneSequence, EPSCaller::HALF_ONE, &mutex};
+    RunnerData halfTwo = {halfTwoSequence, EPSCaller::HALF_TWO, &mutex};
     pthread_t halfOneRunner, halfTwoRunner;
     pthread_create(&halfOneRunner, NULL, &runSequenceEPS, &halfOne);
     pthread_create(&halfTwoRunner, NULL, &runSequenceEPS, &halfTwo);
     pthread_join(halfOneRunner, NULL);
     pthread_join(halfTwoRunner, NULL);
-
-    cout << "tearDown ...." << endl;
-    callerHalfOne.close();
-    callerHalfTwo.close();
-    tearDown();
-}
-
-void SequenceRunner::runGPIO() {
-    GPIOPin halfOnePin = getPin(pinKeyHalfOne);
-    GPIOPin halfTwoPin = getPin(pinKeyHalfTwo);
-    if(!halfOnePin.isOK()) {
-        cout << "Half one pin, not ok" <<endl;
-        // return;
-    }
-    if(!halfTwoPin.isOK()) {
-        cout << "Half two pin, not ok" <<endl;
-        // return;
-    }
-    RunnerDataGPIO halfOne = {halfOneSequence, halfOnePin};
-    RunnerDataGPIO halfTwo = {halfTwoSequence, halfTwoPin};
-    pthread_t halfOneRunner, halfTwoRunner;
-    pthread_create(&halfOneRunner, NULL, &runSequenceGPIO, &halfOne);
-    pthread_create(&halfTwoRunner, NULL, &runSequenceGPIO, &halfTwo);
-    pthread_join(halfOneRunner, NULL);
-    pthread_join(halfTwoRunner, NULL);
-
-    halfOnePin.setPin(false);
-    halfTwoPin.setPin(false);
-    halfOnePin.close();
-    halfTwoPin.close();
     tearDown();
 }

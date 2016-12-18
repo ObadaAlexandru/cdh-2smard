@@ -17,6 +17,7 @@ ConfigParser::ConfigParser(string configPath) {
     configFile.open(configPath);
     if(configFile.is_open()) {
         string line;
+        cout << "=================== PROPERTIES ============================\n";
         while (getline(configFile, line)) {
             if(!regex_match(line, commentRegex)) {
               vector<string> tokens = tokenizer.tokenize(line, "=");
