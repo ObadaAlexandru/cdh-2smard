@@ -28,8 +28,10 @@ void* runSequenceEPS(void *ptr) {
         auto start_time = std::chrono::high_resolution_clock::now();
         pthread_mutex_lock(data->mutex);
         if(item.isActive()) {
+            cout<<"Send active"<<endl;
             data->eps.activate();
         } else {
+            cout<<"send inactive"<<endl;
             data->eps.deactivate();
         }
         pthread_mutex_unlock(data->mutex);
@@ -73,6 +75,14 @@ void SequenceRunner::stopRun() {
 
 void SequenceRunner::tearDown() {
     cout<<"Tear down"<<endl;
+    EPSCaller callerHalfOne(EPSCaller::HALF_ONE);
+    EPSCaller callerHalfTwo(EPSCaller::HALF_TWO);
+    callerHalfOne.open();
+    callerHalfTwo.open();
+    callerHalfOne.deactivate();
+    callerHalfTwo.deactivate();
+    callerHalfOne.close();
+    callerHalfTwo.close();
 }
 
 GPIOPin SequenceRunner::getPin(string pinKey) {
@@ -95,8 +105,8 @@ void SequenceRunner::runEPS() {
     pthread_create(&halfTwoRunner, NULL, &runSequenceEPS, &halfTwo);
     pthread_join(halfOneRunner, NULL);
     pthread_join(halfTwoRunner, NULL);
-    callerHalfOne.deactivate();
-    callerHalfTwo.deactivate();
+
+    cout << "tearDown ...." << endl;
     callerHalfOne.close();
     callerHalfTwo.close();
     tearDown();

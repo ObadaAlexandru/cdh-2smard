@@ -16,15 +16,15 @@ EPSCaller::EPSCaller(EPSCaller::HALF half) {
 }
 
 bool EPSCaller::open() {
-    int response = sd_bus_open_system(&bus);
+    int response = sd_bus_open_user(&bus);
     if (response < 0) {
           fprintf(stderr, "Failed to connect to system bus: %s\n", strerror(-response));
-          //TODO throw exception
+          throw "Failed opening dbus connection";
     }
     return true;
 }
 
-uint8_t EPSCaller::getHalf(EPSCaller::HALF half) {
+int EPSCaller::getHalf(EPSCaller::HALF half) {
     switch (half) {
       case HALF_ONE:
         return 1;
@@ -59,7 +59,7 @@ void EPSCaller::activate() {
 }
 
 void EPSCaller::deactivate() {
-    callDbusEPS(activationMethodName);
+    callDbusEPS(deactivationMethodName);
 }
 
 void EPSCaller::close() {
