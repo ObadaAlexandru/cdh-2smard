@@ -62,8 +62,14 @@ void run(int argc, const char* argv[]) {
 
   GPIOPin pinHalfOne(PinMapper::find(pinKeyHalfOneActivation));
   GPIOPin pinHalfTwo(PinMapper::find(pinKeyHalfOneActivation));
+  pinHalfOne.setDirection(GPIOPin::INPUT);
+  pinHalfTwo.setDirection(GPIOPin::INPUT);
+
   GPIOPin pinHalfOneActivation(PinMapper::find(pinKeyHalfOneActivation));
-  GPIOPin pinHalfTwoActivation(PinMapper::find(pinKeyHalfOneActivation));
+  GPIOPin pinHalfTwoActivation(PinMapper::find(pinKeyHalfTwoActivation));
+
+  pinHalfOneActivation.setDirection(GPIOPin::OUTPUT);
+  pinHalfTwoActivation.setDirection(GPIOPin::OUTPUT);
 
 
   throwIfNotOK(pinHalfOne.isOK(), pinKeyHalfOne);
