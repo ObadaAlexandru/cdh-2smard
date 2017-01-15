@@ -1,6 +1,5 @@
 #include "ConfigParser.h"
 #include "CliParser.h"
-#include "PinReader.h"
 #include "Utility.h"
 
 #include <iostream>
