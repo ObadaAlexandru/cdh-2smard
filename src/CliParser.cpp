@@ -10,15 +10,15 @@ const string CliParser::halfTwoKey = "--half_2";
 
 map<string, string> CliParser::getArguments(int argc, const char* argv[]) {
   map<string, string> arguments;
-  if(argc > 3) {
+  if(argc > 4) {
     cerr << "Too many command line arguments" << '\n';
     printUsage();
-    //TODO Throw exception
+    throw "Invlaid argument list";
   }
   for(int i = 1; i < argc; i++) {
     vector<string> tokens = tokenizer.tokenize(argv[i], "=");
     if(tokens.size() != 2) {
-      cerr << "Invalid argument "<<argv[i]<<"\n";
+      cerr << "Invalid argument " << argv[i]<<"\n";
       printUsage();
       throw "Invalid argument";
     } else {

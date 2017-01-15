@@ -9,7 +9,6 @@
 #include <csignal>
 
 
-
 using namespace std;
 
 #define DEFAULT_CONFIG_PATH "./config.cfg"

@@ -5,6 +5,9 @@
 using namespace std;
 
 list<SequenceItem> SequenceParser::getSequenceFromString(string sequenceString) {
+    if(sequenceString.empty()) {
+        throw "Empty sequence string";
+    }
     vector<string> tokens = tokenizer.tokenize(sequenceString, "|");
     list<SequenceItem> sequence;
     for(string token : tokens) {

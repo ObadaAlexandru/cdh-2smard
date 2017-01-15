@@ -1,14 +1,9 @@
-#include <algorithm>
-#include <list>
-
 #include "gtest/gtest.h"
-#include "SequenceParser.h"
 
-TEST(SequenceParserTest, test) {
-    SequenceParser sequenceParser;
-
-    sequenceParser.getSequenceFromString("A300m|I4000s|A4040s|I300s");
-}
+#include "SequenceParserTest.h"
+#include "CliParserTest.h"
+#include "ConfigParserTest.h"
+#include "TokenizerTest.h"
 
 int main(int ac, char* av[])
 {
