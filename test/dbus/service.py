@@ -12,20 +12,20 @@ class Service(dbus.service.Object):
 
    def run(self):
       dbus.mainloop.glib.DBusGMainLoop(set_as_default=True)
-      bus_name = dbus.service.BusName("moveii.eps.service", dbus.SessionBus())
-      dbus.service.Object.__init__(self, bus_name, "/moveii/epsdaemon")
+      bus_name = dbus.service.BusName("moveii.eps", dbus.SessionBus())
+      dbus.service.Object.__init__(self, bus_name, "/moveii/eps")
 
       self._loop = gobject.MainLoop()
       print "Service running..."
       self._loop.run()
       print "Service stopped"
 
-   @dbus.service.method("moveii.epsdaemon", in_signature='y', out_signature='')
+   @dbus.service.method("moveii.eps", in_signature='q', out_signature='b')
    def switchOn(self, arg):
       print "2SMARD power activated"
       print "Received " + str(int(arg))
 
-   @dbus.service.method("moveii.epsdaemon", in_signature='y', out_signature='')
+   @dbus.service.method("moveii.eps", in_signature='q', out_signature='b')
    def switchOff(self, arg):
       print "2SMARD power deactivated"
       print "Received " + str(int(arg))

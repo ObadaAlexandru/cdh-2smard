@@ -17,6 +17,8 @@
         - build-essential
         - cmake
         - libsystemd-dev
+        - doxygen
+        - graphviz
 
     - name: Checkout utilities
       git:

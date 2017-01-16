@@ -5,7 +5,7 @@
 
 #include <systemd/sd-bus.h>
 /**
- * EPS dBus interface 
+ * EPS dBus interface
  *
  * Provides a dbus interface to the EPS daemon\n
  * One instance is responsible for one half
@@ -41,9 +41,9 @@ private:
   void callDbusEPS(std::string method);
   sd_bus *bus;
   EPSCaller::HALF half;
-  const std::string serviceName = "moveii.eps.service";
-  const std::string objectPath = "/moveii/epsdaemon";
-  const std::string interfaceName = "moveii.epsdaemon";
+  const std::string serviceName = "moveii.eps";
+  const std::string objectPath = "/moveii/eps";
+  const std::string interfaceName = "moveii.eps";
   const std::string activationMethodName = "switchOn";
   const std::string deactivationMethodName = "switchOff";
   const std::string signature = "y";
