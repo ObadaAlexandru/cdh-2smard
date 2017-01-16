@@ -4,17 +4,37 @@
 #include <string>
 
 #include <systemd/sd-bus.h>
-
+/**
+ * EPS dBus interface 
+ *
+ * Provides a dbus interface to the EPS daemon\n
+ * One instance is responsible for one half
+ */
 class EPSCaller {
 public:
   enum HALF {
     HALF_ONE,
     HALF_TWO
   };
+  /**
+   * @param half identifier
+   */
   EPSCaller(EPSCaller::HALF half);
+  /**
+   * Sends an activation signal via dbus
+   */
   void activate();
+  /**
+   * Sends a deactivation signal via dbus
+   */
   void deactivate();
+  /**
+   * Opens a dbus connection
+   */
   bool open();
+  /**
+   * Closes dbus connection
+   */
   void close();
 private:
   int getHalf(EPSCaller::HALF half);
