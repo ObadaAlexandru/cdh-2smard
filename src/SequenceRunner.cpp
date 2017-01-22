@@ -1,6 +1,8 @@
 #include "SequenceRunner.h"
 #include "EPSCaller.h"
+#include "Logger.h"
 
+#include <string>
 #include <iostream>
 #include <unistd.h>
 #include <chrono>
@@ -26,10 +28,10 @@ void* runSequenceEPS(void *ptr) {
         auto start_time = std::chrono::high_resolution_clock::now();
         pthread_mutex_lock(data->mutex);
         if(item.isActive()) {
-            cout<<"Send active"<<endl;
+            Logger::info("Send active\n");
             epsCaller.activate();
         } else {
-            cout<<"Send inactive"<<endl;
+            Logger::info("Send inactive\n");
             epsCaller.deactivate();
         }
         pthread_mutex_unlock(data->mutex);
@@ -55,10 +57,10 @@ void SequenceRunner::stopRun() {
 }
 
 void SequenceRunner::tearDown() {
-    cout << "================== 2SMARD Deactivation routine ============\n";
+    Logger::info("================== 2SMARD Deactivation routine ============\n");
     EPSCaller callerHalfOne(EPSCaller::HALF_ONE);
     EPSCaller callerHalfTwo(EPSCaller::HALF_TWO);
-    auto printFunc = [](int halfId) {cout << "Deactivating 2SMARD half " << halfId << endl;};
+    auto printFunc = [](int halfId) {Logger::info("Deactivating 2SMARD half " + to_string(halfId) + "\n");};
     callerHalfOne.open();
     callerHalfTwo.open();
     printFunc(1);
@@ -70,7 +72,7 @@ void SequenceRunner::tearDown() {
 }
 
 void SequenceRunner::run() {
-    cout << "================== Sequence execution =====================\n";
+    Logger::info("================== Sequence execution =====================\n");
     pthread_mutex_t mutex;
     pthread_mutex_init(&mutex, NULL);
     RunnerData halfOne = {halfOneSequence, EPSCaller::HALF_ONE, &mutex};

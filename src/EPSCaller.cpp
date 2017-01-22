@@ -1,4 +1,5 @@
 #include "EPSCaller.h"
+#include "Logger.h"
 
 #include <iostream>
 
@@ -18,7 +19,8 @@ EPSCaller::EPSCaller(EPSCaller::HALF half) {
 bool EPSCaller::open() {
     int response = sd_bus_open_user(&bus);
     if (response < 0) {
-          fprintf(stderr, "Failed to connect to system bus: %s\n", strerror(-response));
+          string msg = Logger::ERROR + " Failed to connect to system bus: %s\n";
+          fprintf(stderr, msg.c_str(), strerror(-response));
           throw "Failed opening dbus connection";
     }
     return true;
@@ -48,7 +50,8 @@ void EPSCaller::callDbusEPS(string method) {
                            signature.c_str(),
                            getHalf(half));
     if (response < 0) {
-        fprintf(stderr, "2SMARD %s failed: %s\n", method.c_str(), error.message);
+        string msg = Logger::ERROR + " 2SMARD %s failed: %s\n";
+        fprintf(stderr, msg.c_str(), method.c_str(), error.message);
     }
     sd_bus_error_free(&error);
     sd_bus_message_unref(message);

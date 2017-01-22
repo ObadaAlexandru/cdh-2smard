@@ -3,7 +3,9 @@
 #include "CliParser.h"
 #include "SequenceRunner.h"
 #include "Utility.h"
+#include "Logger.h"
 
+#include <string>
 #include <iostream>
 #include <utility>
 #include <csignal>
@@ -14,9 +16,9 @@ using namespace std;
 #define DEFAULT_CONFIG_PATH "./config.cfg"
 
 void signalHandler(int signal) {
-		cout << "\n================== EXECUTION INTERRUPTED ==================\n";
-		cout << "Received signal = "<<signal<<endl;
-		cout << "2SMARD will be deactivated\n";
+		Logger::info("\n================== EXECUTION INTERRUPTED ==================\n");
+		Logger::info("Received signal = " + to_string(signal) + "\n");
+		Logger::info("2SMARD will be deactivated\n");
 		SequenceRunner::stopRun();
 }
 
@@ -25,12 +27,12 @@ pair<list<SequenceItem>, list<SequenceItem>> getSequences(ConfigParser &configPa
 		pair<string, string> sequences = configParser.getSequences();
 
 		if(cliArguments.count(CliParser::halfOneKey) != 0) {
-			cout << "Override first half with = "<< cliArguments.find(CliParser::halfOneKey)->second << "\n";
+			Logger::info("Override first half with = " + cliArguments.find(CliParser::halfOneKey)->second + "\n");
 			sequences.first = cliArguments.find(CliParser::halfOneKey)->second;
 		}
 
 		if(cliArguments.count(CliParser::halfTwoKey) != 0) {
-			cout << "Override second half with = " << cliArguments.find(CliParser::halfTwoKey)->second << "\n";
+			Logger::info("Override second half with = " + cliArguments.find(CliParser::halfTwoKey)->second + "\n");
 			sequences.second = cliArguments.find(CliParser::halfTwoKey)->second;
 		}
 		return make_pair(sequenceParser.getSequenceFromString(sequences.first), sequenceParser.getSequenceFromString(sequences.second));
@@ -54,6 +56,7 @@ int main(int argc, const char* argv[])
 			run(argc, argv);
 			return 0;
 		} catch(const char* msg) {
-			cerr << msg << "\n";
+			string str(msg);
+			Logger::error(str + "\n");
 		}
 }

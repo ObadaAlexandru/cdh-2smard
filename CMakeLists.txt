@@ -21,9 +21,9 @@ add_executable(2smard_activator
 	src/SequenceItem.cpp
 	src/Tokenizer.cpp
 	src/CliParser.cpp
+	src/Logger.cpp
 	src/SequenceRunner.cpp
 	src/EPSCaller.cpp
-	# src/PinReader.cpp
 	src/Utility.cpp
 )
 
@@ -33,8 +33,8 @@ add_executable(2smard_checker
 	src/SequenceParser.cpp
 	src/SequenceItem.cpp
 	src/Tokenizer.cpp
+	src/Logger.cpp
 	src/CliParser.cpp
-	# src/PinReader.cpp
 	src/Utility.cpp
 )
 
@@ -50,6 +50,7 @@ add_executable(${PROJECT_TEST_NAME} ${TEST_SRC_FILES}
 	src/SequenceItem.cpp
 	src/Tokenizer.cpp
 	src/CliParser.cpp
+	src/Logger.cpp
 	src/Utility.cpp)
 add_dependencies(${PROJECT_TEST_NAME} googletest)
 

@@ -1,4 +1,6 @@
 #include "SequenceParser.h"
+#include "Logger.h"
+
 #include <iostream>
 #include <regex>
 
@@ -31,7 +33,7 @@ SequenceItem SequenceParser::tokenToSequenceItem(string token) {
         /**
           The provided sequence is invalid
         **/
-        cerr << "Invalid token="<<token<<"\n";
+        Logger::error("Invalid token=" + token + "\n");
         throw "Invalid token";
     }
 }

@@ -4,6 +4,7 @@
 #include "CliParserTest.h"
 #include "ConfigParserTest.h"
 #include "TokenizerTest.h"
+#include "LoggerTest.h"
 
 int main(int ac, char* av[])
 {

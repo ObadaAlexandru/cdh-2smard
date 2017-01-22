@@ -1,5 +1,6 @@
 #include "Utility.h"
 #include "CliParser.h"
+#include "Logger.h"
 
 #include <iostream>
 
@@ -9,7 +10,7 @@ std::map<std::string, std::string> Utility::getCliArguments(int argc, const char
   CliParser cliParser;
   map<string, string> cliArguments;
   if(argc > 1) {
-    cout << "Command line arguments provided\n";
+    Logger::info("Command line arguments provided\n");
     cliArguments = cliParser.getArguments(argc, argv);
   }
   return cliArguments;
