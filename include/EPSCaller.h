@@ -23,11 +23,11 @@ public:
   /**
    * Sends an activation signal via dbus
    */
-  void activate();
+  bool activate();
   /**
    * Sends a deactivation signal via dbus
    */
-  void deactivate();
+  bool deactivate();
   /**
    * Opens a dbus connection
    */
@@ -38,7 +38,7 @@ public:
   void close();
 private:
   int getHalf(EPSCaller::HALF half);
-  void callDbusEPS(std::string method);
+  bool callDbusEPS(std::string method);
   sd_bus *bus;
   EPSCaller::HALF half;
   const std::string serviceName = "moveii.eps";
@@ -46,6 +46,7 @@ private:
   const std::string interfaceName = "moveii.eps";
   const std::string activationMethodName = "switchOn";
   const std::string deactivationMethodName = "switchOff";
-  const std::string signature = "y";
+  const std::string inputSignature = "q";
+  const std::string outputSignature = "b";
 };
 #endif

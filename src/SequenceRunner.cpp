@@ -26,16 +26,34 @@ void* runSequenceEPS(void *ptr) {
     epsCaller.open();
     for(SequenceItem item : data->sequence) {
         auto start_time = std::chrono::high_resolution_clock::now();
-        pthread_mutex_lock(data->mutex);
-        if(item.isActive()) {
-            Logger::info("Send active\n");
-            epsCaller.activate();
-        } else {
-            Logger::info("Send inactive\n");
-            epsCaller.deactivate();
+        while (true && !SequenceRunner::isStop()) {
+            pthread_mutex_lock(data->mutex);
+            try {
+            if(item.isActive()) {
+                Logger::info("Send active to half_" + to_string(data->half) + "\n");
+                if(epsCaller.activate()) {
+                    break;
+                } else {
+                    Logger::error("EPS daemon didn't execute the activation command for half_" + to_string(data->half) + "\n");
+                    usleep(100000);
+                    Logger::info("Retrying");
+                }
+            } else {
+                Logger::info("Send inactive to half_" + to_string(data->half) + "\n");
+                if(epsCaller.deactivate()) {
+                    break;
+                } else {
+                    Logger::error("EPS daemon didn't execute the deactivation command for half_" + to_string(data->half) + "\n");
+                    usleep(100000);
+                    Logger::info("Retrying");
+                }
+            }
+          } catch (const char* msg) {
+              Logger::error("Error while accessing EPS daemon. Sequence execution will stop\n");
+              SequenceRunner::stopRun();
+          }
         }
         pthread_mutex_unlock(data->mutex);
-        // TODO refactore: use conditional variables and listen on events
         while(item.getPeriod() > chrono::duration_cast<chrono::seconds>(chrono::high_resolution_clock::now() - start_time).count()) {
           usleep(100000);
           if(SequenceRunner::isStop()) {

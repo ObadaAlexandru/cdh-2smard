@@ -37,32 +37,43 @@ int EPSCaller::getHalf(EPSCaller::HALF half) {
     }
 }
 
-void EPSCaller::callDbusEPS(string method) {
-    sd_bus_error error = SD_BUS_ERROR_NULL;
-    sd_bus_message *message = NULL;
-    int response = sd_bus_call_method(bus,
-                           serviceName.c_str(),
-                           objectPath.c_str(),
-                           interfaceName.c_str(),
-                           method.c_str(),
-                           &error,
-                           &message,
-                           signature.c_str(),
-                           getHalf(half));
-    if (response < 0) {
-        string msg = Logger::ERROR + " 2SMARD %s failed: %s\n";
-        fprintf(stderr, msg.c_str(), method.c_str(), error.message);
-    }
-    sd_bus_error_free(&error);
-    sd_bus_message_unref(message);
+bool EPSCaller::callDbusEPS(string method) {
+      sd_bus_error error = SD_BUS_ERROR_NULL;
+      sd_bus_message *message = NULL;
+      bool status;
+      int response = sd_bus_call_method(bus,
+                             serviceName.c_str(),
+                             objectPath.c_str(),
+                             interfaceName.c_str(),
+                             method.c_str(),
+                             &error,
+                             &message,
+                             inputSignature.c_str(),
+                             getHalf(half));
+      if (response < 0) {
+          string msg = Logger::ERROR + " 2SMARD %s failed: %s\n";
+          fprintf(stderr, msg.c_str(), method.c_str(), error.message);
+          throw "Failed calling eps";
+      }
+
+      response = sd_bus_message_read(message, outputSignature.c_str(), &status);
+
+      if (response < 0) {
+          string msg = Logger::ERROR + " 2SMARD %s failed: %s\n";
+          fprintf(stderr, msg.c_str(), method.c_str(), error.message);
+          throw "Failed reading eps result";
+      }
+      sd_bus_error_free(&error);
+      sd_bus_message_unref(message);
+      return status;
+  }
+
+bool EPSCaller::activate() {
+    return callDbusEPS(activationMethodName);
 }
 
-void EPSCaller::activate() {
-    callDbusEPS(activationMethodName);
-}
-
-void EPSCaller::deactivate() {
-    callDbusEPS(deactivationMethodName);
+bool EPSCaller::deactivate() {
+    return callDbusEPS(deactivationMethodName);
 }
 
 void EPSCaller::close() {

@@ -24,11 +24,13 @@ class Service(dbus.service.Object):
    def switchOn(self, arg):
       print "2SMARD power activated"
       print "Received " + str(int(arg))
+      return True
 
    @dbus.service.method("moveii.eps", in_signature='q', out_signature='b')
    def switchOff(self, arg):
       print "2SMARD power deactivated"
       print "Received " + str(int(arg))
+      return True
 
 if __name__ == "__main__":
    Service("This is the service").run()
