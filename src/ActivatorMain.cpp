@@ -60,6 +60,7 @@ int main(int argc, const char* argv[])
 			Logger::error(exception.getMessage() + "\n");
 			return 1;
 		} catch(...) {
-			Logger::error(Logger::CRITICAL + " 2SMARD : Unexpected error occured");
+			Logger::critical("2SMARD-005 : Unexpected error occured");
+			return 1;
 		}
 }
