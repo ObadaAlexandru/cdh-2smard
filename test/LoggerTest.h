@@ -46,3 +46,13 @@ TEST(LoggerTest, ErrorLog) {
 
     EXPECT_EQ("<3> " + msg, output);
 }
+
+TEST(LoggerTest, CriticalLog) {
+    string msg = "My test log message";
+    testing::internal::CaptureStdout();
+
+    Logger::critical(msg);
+    string output = testing::internal::GetCapturedStdout();
+
+    EXPECT_EQ("<2> " + msg, output);
+}

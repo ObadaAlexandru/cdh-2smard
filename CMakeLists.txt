@@ -25,6 +25,7 @@ add_executable(2smard_activator
 	src/SequenceRunner.cpp
 	src/EPSCaller.cpp
 	src/Utility.cpp
+	src/ErrorCodeException.cpp
 )
 
 add_executable(2smard_checker
@@ -36,6 +37,7 @@ add_executable(2smard_checker
 	src/Logger.cpp
 	src/CliParser.cpp
 	src/Utility.cpp
+	src/ErrorCodeException.cpp
 )
 
 # Test
@@ -51,7 +53,9 @@ add_executable(${PROJECT_TEST_NAME} ${TEST_SRC_FILES}
 	src/Tokenizer.cpp
 	src/CliParser.cpp
 	src/Logger.cpp
-	src/Utility.cpp)
+	src/Utility.cpp
+	src/ErrorCodeException.cpp
+)
 add_dependencies(${PROJECT_TEST_NAME} googletest)
 
 target_link_libraries(${PROJECT_TEST_NAME}

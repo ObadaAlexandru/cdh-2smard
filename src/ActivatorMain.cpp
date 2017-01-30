@@ -4,6 +4,7 @@
 #include "SequenceRunner.h"
 #include "Utility.h"
 #include "Logger.h"
+#include "ErrorCodeException.h"
 
 #include <string>
 #include <iostream>
@@ -55,8 +56,10 @@ int main(int argc, const char* argv[])
 		try {
 			run(argc, argv);
 			return 0;
-		} catch(const char* msg) {
-			string str(msg);
-			Logger::error(str + "\n");
+		} catch(ErrorCodeException& exception) {
+			Logger::error(exception.getMessage() + "\n");
+			return 1;
+		} catch(...) {
+			Logger::error(Logger::CRITICAL + " 2SMARD : Unexpected error occured");
 		}
 }

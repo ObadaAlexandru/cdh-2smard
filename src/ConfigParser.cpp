@@ -1,5 +1,6 @@
 #include "ConfigParser.h"
 #include "Logger.h"
+#include "ConfigParsingException.h"
 
 #include <fstream>
 #include <iostream>
@@ -26,8 +27,7 @@ ConfigParser::ConfigParser(string configPath) {
             if(!regex_match(line, commentRegex)) {
               vector<string> tokens = tokenizer.tokenize(line, "=");
               if(tokens.size() != 2) {
-                  Logger::error("Invalid config line: " + line + "\n");
-                  throw "Invalid config line";
+                  throw ConfigParsingException("Invalid config line: " + line);
               }
               Logger::info("Property[" + tokens[0] + "] = " + tokens[1] + "\n");
               properties[tokens[0]] = tokens[1];

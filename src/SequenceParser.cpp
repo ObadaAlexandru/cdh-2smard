@@ -1,5 +1,6 @@
 #include "SequenceParser.h"
 #include "Logger.h"
+#include "SequenceParsingException.h"
 
 #include <iostream>
 #include <regex>
@@ -8,7 +9,7 @@ using namespace std;
 
 list<SequenceItem> SequenceParser::getSequenceFromString(string sequenceString) {
     if(sequenceString.empty()) {
-        throw "Empty sequence string";
+        throw SequenceParsingException("Empty sequence string");
     }
     vector<string> tokens = tokenizer.tokenize(sequenceString, "|");
     list<SequenceItem> sequence;
@@ -34,6 +35,6 @@ SequenceItem SequenceParser::tokenToSequenceItem(string token) {
           The provided sequence is invalid
         **/
         Logger::error("Invalid token=" + token + "\n");
-        throw "Invalid token";
+        throw SequenceParsingException("Invalid token=" + token);
     }
 }
