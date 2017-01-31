@@ -19,8 +19,8 @@ Settings
 
 | Name                       | Default                        | Description                         |
 |----------------------------|--------------------------------|-------------------------------------|
-| half\_1                    | A5s\|I4000s\|A4040s\|I300s     | Half one activation sequence        |
-| half\_2                    | A5s\|I4000s\|A4040s\|I300s     | Half two activation sequence        |
+| half\_1                    | A5s&#124;I4000s&#124;A4040s&#124;I300s     | Half one activation sequence        |
+| half\_2                    | A5s&#124;I4000s&#124;A4040s&#124;I300s     | Half two activation sequence        |
 | pin\_half\_1               | --                             | Sensor read pin half one            |
 | pin\_half\_2               | --                             | Sensor read pin half two            |
 | activation\_pin\_half\_1   | --                             | Sensor half one activation pin      |
