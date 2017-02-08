@@ -99,3 +99,21 @@ TEST(ConfigParserTest, GetCorrectSequencePair) {
 
     EXPECT_TRUE(deleteFile(testConfPath));
 }
+
+
+TEST(ConfigParserTest, ConfigWithEmptyLine) {
+  string testConfPath = "/tmp/testConfig.conf";
+  string configContent = "half_1=A30s|I25s|A45s\n"
+                         "half_2=A45s|I15s|A30s|I5m|A45s\n"
+                         ""
+                         "      ";
+  createFile(testConfPath, configContent);
+  ConfigParser configParser(testConfPath);
+
+  pair<string, string> halfSequences = configParser.getSequences();
+
+  EXPECT_EQ("A30s|I25s|A45s", halfSequences.first);
+  EXPECT_EQ("A45s|I15s|A30s|I5m|A45s", halfSequences.second);
+
+  EXPECT_TRUE(deleteFile(testConfPath));
+}

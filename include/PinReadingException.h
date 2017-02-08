@@ -5,6 +5,6 @@
 
 class PinReadingException : public ErrorCodeException {
 public:
-    PinReadingException(std::string msg) : ErrorCodeException("2SMARD-005", msg) {}
+    PinReadingException(std::string msg) : ErrorCodeException("2SMARD-006", msg) {}
 };
 #endif

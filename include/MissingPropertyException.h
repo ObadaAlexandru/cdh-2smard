@@ -5,6 +5,6 @@
 
 class MissingPropertyException : public ErrorCodeException {
 public:
-    MissingPropertyException(std::string msg) : ErrorCodeException("2SMARD-006", msg) {}
+    MissingPropertyException(std::string msg) : ErrorCodeException("2SMARD-007", msg) {}
 };
 #endif

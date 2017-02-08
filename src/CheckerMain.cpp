@@ -108,6 +108,9 @@ int main(int argc, const char* argv[])
     } catch(ErrorCodeException& exception) {
 			cerr << exception.getMessage() << "\n";
       return 1;
-		}
+		} catch (...) {
+      cerr << "2SMARD-005: Unexpected exception\n";
+      return 2;
+    }
     return 0;
 }

@@ -24,7 +24,7 @@ ConfigParser::ConfigParser(string configPath) {
         string line;
         Logger::info("=================== PROPERTIES ============================\n");
         while (getline(configFile, line)) {
-            if(!regex_match(line, commentRegex)) {
+            if(!(regex_match(line, commentRegex) || line.find_first_not_of(' ') == string::npos)) {
               vector<string> tokens = tokenizer.tokenize(line, "=");
               if(tokens.size() != 2) {
                   throw ConfigParsingException("Invalid config line: " + line);
