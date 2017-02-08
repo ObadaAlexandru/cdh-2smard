@@ -48,4 +48,14 @@ The configuration file must contain the following properties:
 * **activation_pin_half_1**: sensor half 1 activation pin
 * **activation_pin_half_2**: sensor half 2 activation pin
 
+Sample configuration file:
+```
+pin_half_1=P15
+pin_half_2=P16
+activation_pin_half_1=P17
+activation_pin_half_2=P18
+```
+
+_**NB** The pin names must correspond to the mapping specified in [moveio](https://gitlab.lrz.de/move-ii/cdh_moveio#pinmapper-setup-file)_
+
 The application will activate the sensors, read the values and display the status on the stdout.
