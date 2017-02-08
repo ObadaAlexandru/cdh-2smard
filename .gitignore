@@ -11,3 +11,10 @@ build
 
 # Doxygen
 docs
+
+#Python
+venv
+.idea
+*.html
+*.xml
+*.pyc
