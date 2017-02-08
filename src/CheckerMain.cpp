@@ -1,6 +1,8 @@
 #include "ConfigParser.h"
 #include "CliParser.h"
 #include "Utility.h"
+#include "PinReadingException.h"
+#include "MissingPropertyException.h"
 
 #include <iostream>
 #include <string>
@@ -19,8 +21,7 @@ void printStatus(bool pinStatus, int halfId) {
 string getPinId(string pinKey) {
     string pinId = PinMapper::find(pinKey);
     if (pinId.compare("invalid") == 0) {
-        cerr << "Pin key = " + pinKey << " is not valid\n";
-        throw "Invalid pin key ";
+        throw PinReadingException("Pin<" + pinKey + "> is not valid");
     }
     cout << "Using pin " << pinId <<"\n";
     return pinId;
@@ -28,21 +29,19 @@ string getPinId(string pinKey) {
 
 void throwIfNotOK(bool isOK, string pinId) {
     if(!isOK) {
-        cerr << "Not possible to read pin " + pinId <<endl;
-        // throw "Invalid pin";
+        throw PinReadingException("Not possible to read pin<" + pinId + ">");
     }
 }
 
 void checkIfDefined(map<string, string> &properties, string key) {
   if(properties.count(key) == 0) {
-      cerr << "Property " + key + " undefined\n";
-      throw "Missing property";
+      throw MissingPropertyException("Property " + key + " undefined");
   }
 }
 
 void run(int argc, const char* argv[]) {
   if (!PinMapper::valid()) {
-      throw "Failed loading pin mapping\n";
+      throw PinReadingException("Failed loading pin map");
   }
 
   map<string, string> cliArguments = Utility::getCliArguments(argc, argv);
@@ -106,8 +105,9 @@ int main(int argc, const char* argv[])
 {
     try {
       run(argc, argv);
-    } catch(const char* msg) {
-			cerr << msg << "\n";
+    } catch(ErrorCodeException& exception) {
+			cerr << exception.getMessage() << "\n";
+      return 1;
 		}
     return 0;
 }
