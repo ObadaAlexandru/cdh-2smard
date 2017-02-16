@@ -46,7 +46,7 @@ private:
   const std::string interfaceName = "moveii.eps";
   const std::string activationMethodName = "switchOn";
   const std::string deactivationMethodName = "switchOff";
-  const std::string inputSignature = "i";
+  const std::string inputSignature = "q";
   const std::string outputSignature = "b";
 };
 #endif
