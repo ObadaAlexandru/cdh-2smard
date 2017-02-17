@@ -55,6 +55,7 @@ void deactivateSensors() {
     printStatus(2, deactivationMessage);
     pinHalfTwoActivation->setPin(false);
     usleep(10000000);
+    exit(0);
 }
 
 void run(int argc, const char* argv[]) {
