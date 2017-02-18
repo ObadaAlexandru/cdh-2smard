@@ -66,8 +66,8 @@ void run(int argc, const char* argv[]) {
     string pinKeyHalfOneActivation = configs[ConfigParser::pinKeyHalfOneActivation];
     string pinKeyHalfTwoActivation = configs[ConfigParser::pinKeyHalfTwoActivation];
 
-    GPIOPin pinHalfOne(PinMapper::find(pinKeyHalfOneActivation));
-    GPIOPin pinHalfTwo(PinMapper::find(pinKeyHalfOneActivation));
+    GPIOPin pinHalfOne(PinMapper::find(pinKeyHalfOne));
+    GPIOPin pinHalfTwo(PinMapper::find(pinKeyHalfTwo));
     pinHalfOne.setDirection(GPIOPin::INPUT);
     pinHalfTwo.setDirection(GPIOPin::INPUT);
 
