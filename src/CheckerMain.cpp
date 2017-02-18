@@ -90,7 +90,7 @@ void run(int argc, const char* argv[]) {
     throwIfNotOK(pinHalfTwoActivation.isOK(), pinKeyHalfTwoActivation);
 
     cout << "====================== SENSOR ACTIVATION ==================\n";
-    string activationMessage = "Activating pin ";
+    string activationMessage = "Activating sensor ";
     printStatus(1, activationMessage);
     pinHalfOneActivation.setPin(true);
     printStatus(2, activationMessage);
@@ -107,10 +107,10 @@ void run(int argc, const char* argv[]) {
             halfOneStatus = newHalfOneStatus;
             halfTwoStatus = newHalfTwoStatus;
         }
-        usleep(1000000);
+        usleep(100000);
     }
     cout << "====================== SENSOR DEACTIVATION ================\n";
-    string deactivationMessage = "Deactivating pin ";
+    string deactivationMessage = "Deactivating sensor ";
     printStatus(1, deactivationMessage);
     pinHalfOneActivation.setPin(false);
     printStatus(2, deactivationMessage);
