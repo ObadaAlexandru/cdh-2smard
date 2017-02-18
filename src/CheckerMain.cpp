@@ -14,8 +14,7 @@
 
 using namespace std;
 
-GPIOPin *pinHalfOneActivation;
-GPIOPin *pinHalfTwoActivation;
+static volatile bool running = true;
 
 void printStatus(bool pinStatus, int halfId) {
     string statusAsString = pinStatus ? "open" : "closed";
@@ -47,16 +46,6 @@ void printStatus(int pinId, string msg) {
     cout << msg << pinId << endl;
 }
 
-void deactivateSensors() {
-    cout << "====================== SENSOR DEACTIVATION ================\n";
-    string deactivationMessage = "Deactivating pin ";
-    printStatus(1, deactivationMessage);
-    pinHalfOneActivation->setPin(false);
-    printStatus(2, deactivationMessage);
-    pinHalfTwoActivation->setPin(false);
-    usleep(10000000);
-}
-
 void run(int argc, const char* argv[]) {
     if (!PinMapper::valid()) {
         throw PinReadingException("Failed loading pin map");
@@ -81,30 +70,32 @@ void run(int argc, const char* argv[]) {
     pinHalfOne.setDirection(GPIOPin::INPUT);
     pinHalfTwo.setDirection(GPIOPin::INPUT);
 
-    pinHalfOneActivation = new GPIOPin(PinMapper::find(pinKeyHalfOneActivation));
-    pinHalfTwoActivation = new GPIOPin(PinMapper::find(pinKeyHalfTwoActivation));
+    GPIOPin pinHalfOneActivation(PinMapper::find(pinKeyHalfOneActivation));
+    GPIOPin pinHalfTwoActivation(PinMapper::find(pinKeyHalfTwoActivation));
 
-    pinHalfOneActivation->setDirection(GPIOPin::OUTPUT);
-    pinHalfTwoActivation->setDirection(GPIOPin::OUTPUT);
+    pinHalfOneActivation.setDirection(GPIOPin::OUTPUT);
+    pinHalfTwoActivation.setDirection(GPIOPin::OUTPUT);
 
 
     throwIfNotOK(pinHalfOne.isOK(), pinKeyHalfOne);
     throwIfNotOK(pinHalfTwo.isOK(), pinKeyHalfTwo);
-    throwIfNotOK(pinHalfOneActivation->isOK(), pinKeyHalfOneActivation);
-    throwIfNotOK(pinHalfTwoActivation->isOK(), pinKeyHalfTwoActivation);
+    throwIfNotOK(pinHalfOneActivation.isOK(), pinKeyHalfOneActivation);
+    throwIfNotOK(pinHalfTwoActivation.isOK(), pinKeyHalfTwoActivation);
 
     cout << "====================== SENSOR ACTIVATION ==================\n";
     string activationMessage = "Activating pin ";
     printStatus(1, activationMessage);
-    pinHalfOneActivation->setPin(true);
+    pinHalfOneActivation.setPin(true);
     printStatus(2, activationMessage);
-    pinHalfTwoActivation->setPin(true);
+    pinHalfTwoActivation.setPin(true);
     usleep(10000000);
     bool halfOneStatus = false;
     bool halfTwoStatus = false;
-    while(true) {
+    while(running) {
         bool newHalfOneStatus = pinHalfOne.readPin();
         bool newHalfTwoStatus = pinHalfTwo.readPin();
+        cout << "Half[1]= " << newHalfOneStatus << endl;
+        cout << "Half[2]= " << newHalfTwoStatus << endl;
         if(newHalfOneStatus != halfOneStatus || newHalfTwoStatus != halfTwoStatus) {
             cout << "====================== 2SMARD STATUS ======================\n";
             printStatus(newHalfOneStatus, 1);
@@ -115,17 +106,22 @@ void run(int argc, const char* argv[]) {
         usleep(1000000);
     }
     cout << "====================== SENSOR DEACTIVATION ================\n";
-    deactivateSensors();
+    string deactivationMessage = "Deactivating pin ";
+    printStatus(1, deactivationMessage);
+    pinHalfOneActivation.setPin(false);
+    printStatus(2, deactivationMessage);
+    pinHalfTwoActivation.setPin(false);
+    usleep(2000000);
     pinHalfOne.close();
     pinHalfTwo.close();
-    pinHalfOneActivation->close();
-    pinHalfTwoActivation->close();
+    pinHalfOneActivation.close();
+    pinHalfTwoActivation.close();
 }
 
 void signalHandler(int signal) {
 		cout << "\n================== EXECUTION INTERRUPTED ==================\n";
 		cout << "Received signal = " + to_string(signal) + "\n";
-    deactivateSensors();
+    running = false;
 }
 
 int main(int argc, const char* argv[])
