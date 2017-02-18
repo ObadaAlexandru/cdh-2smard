@@ -21,6 +21,12 @@ void printStatus(bool pinStatus, int halfId) {
     cout << "HALF[" << halfId << "] = " << statusAsString << endl;
 }
 
+void printSensorsStatus(bool halfOne, bool halfTwo) {
+    cout << "====================== 2SMARD STATUS ======================\n";
+    printStatus(halfOne, 1);
+    printStatus(halfTwo, 2);
+}
+
 string getPinId(string pinKey) {
     string pinId = PinMapper::find(pinKey);
     if (pinId.compare("invalid") == 0) {
@@ -90,17 +96,14 @@ void run(int argc, const char* argv[]) {
     printStatus(2, activationMessage);
     pinHalfTwoActivation.setPin(true);
     usleep(10000000);
-    bool halfOneStatus = false;
-    bool halfTwoStatus = false;
+    bool halfOneStatus = pinHalfOne.readPin();
+    bool halfTwoStatus = pinHalfTwo.readPin();
+    printSensorsStatus(halfOneStatus, halfTwoStatus);
     while(running) {
         bool newHalfOneStatus = pinHalfOne.readPin();
         bool newHalfTwoStatus = pinHalfTwo.readPin();
-        cout << "Half[1]= " << newHalfOneStatus << endl;
-        cout << "Half[2]= " << newHalfTwoStatus << endl;
         if(newHalfOneStatus != halfOneStatus || newHalfTwoStatus != halfTwoStatus) {
-            cout << "====================== 2SMARD STATUS ======================\n";
-            printStatus(newHalfOneStatus, 1);
-            printStatus(newHalfTwoStatus, 2);
+            printSensorsStatus(newHalfOneStatus, newHalfTwoStatus);
             halfOneStatus = newHalfOneStatus;
             halfTwoStatus = newHalfTwoStatus;
         }
