@@ -46,6 +46,7 @@ void printStatus(int pinId, string msg) {
     cout << msg << pinId << endl;
 }
 
+
 void run(int argc, const char* argv[]) {
     if (!PinMapper::valid()) {
         throw PinReadingException("Failed loading pin map");
