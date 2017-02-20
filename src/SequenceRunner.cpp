@@ -30,26 +30,26 @@ void* runSequenceEPS(void *ptr) {
             pthread_mutex_lock(data->mutex);
             try {
             if(item.isActive()) {
-                Logger::info("Send active to half_" + to_string(data->half) + "\n");
+                Logger::info("Send active to half_" + to_string(data->half));
                 if(epsCaller.activate()) {
                     break;
                 } else {
-                    Logger::error("EPS daemon didn't execute the activation command for half_" + to_string(data->half) + "\n");
+                    Logger::error("EPS daemon didn't execute the activation command for half_" + to_string(data->half));
                     usleep(100000);
                     Logger::info("Retrying");
                 }
             } else {
-                Logger::info("Send inactive to half_" + to_string(data->half) + "\n");
+                Logger::info("Send inactive to half_" + to_string(data->half));
                 if(epsCaller.deactivate()) {
                     break;
                 } else {
-                    Logger::error("EPS daemon didn't execute the deactivation command for half_" + to_string(data->half) + "\n");
+                    Logger::error("EPS daemon didn't execute the deactivation command for half_" + to_string(data->half));
                     usleep(100000);
                     Logger::info("Retrying");
                 }
             }
           } catch (const char* msg) {
-              Logger::error("Error while accessing EPS daemon. Sequence execution will stop\n");
+              Logger::error("Error while accessing EPS daemon. Sequence execution will stop");
               SequenceRunner::stopRun();
           }
         }
@@ -75,10 +75,10 @@ void SequenceRunner::stopRun() {
 }
 
 void SequenceRunner::tearDown() {
-    Logger::info("================== 2SMARD Deactivation routine ============\n");
+    Logger::info("================== 2SMARD Deactivation routine ============");
     EPSCaller callerHalfOne(EPSCaller::HALF_ONE);
     EPSCaller callerHalfTwo(EPSCaller::HALF_TWO);
-    auto printFunc = [](int halfId) {Logger::info("Deactivating 2SMARD half " + to_string(halfId) + "\n");};
+    auto printFunc = [](int halfId) {Logger::info("Deactivating 2SMARD half " + to_string(halfId));};
     callerHalfOne.open();
     callerHalfTwo.open();
     printFunc(1);
@@ -90,7 +90,7 @@ void SequenceRunner::tearDown() {
 }
 
 void SequenceRunner::run() {
-    Logger::info("================== Sequence execution =====================\n");
+    Logger::info("================== Sequence execution =====================");
     pthread_mutex_t mutex;
     pthread_mutex_init(&mutex, NULL);
     RunnerData halfOne = {halfOneSequence, EPSCaller::HALF_ONE, &mutex};

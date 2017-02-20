@@ -8,5 +8,5 @@ ErrorCodeException::ErrorCodeException(string errorCode, string msg) {
 }
 
 string ErrorCodeException::getMessage() {
-    return errorCode + ": " + msg; 
+    return errorCode + ": " + msg;
 }

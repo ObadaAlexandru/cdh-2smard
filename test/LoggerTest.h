@@ -14,7 +14,7 @@ TEST(LoggerTest, NoticeLog) {
     Logger::notice(msg);
     string output = testing::internal::GetCapturedStdout();
 
-    EXPECT_EQ("<6> " + msg, output);
+    EXPECT_EQ("<6> " + msg + "\n", output);
 }
 
 TEST(LoggerTest, InfoLog) {
@@ -24,7 +24,7 @@ TEST(LoggerTest, InfoLog) {
     Logger::info(msg);
     string output = testing::internal::GetCapturedStdout();
 
-    EXPECT_EQ("<5> " + msg, output);
+    EXPECT_EQ("<5> " + msg + "\n", output);
 }
 
 TEST(LoggerTest, WarnLog) {
@@ -34,7 +34,7 @@ TEST(LoggerTest, WarnLog) {
     Logger::warn(msg);
     string output = testing::internal::GetCapturedStdout();
 
-    EXPECT_EQ("<4> " + msg, output);
+    EXPECT_EQ("<4> " + msg + "\n", output);
 }
 
 TEST(LoggerTest, ErrorLog) {
@@ -44,7 +44,7 @@ TEST(LoggerTest, ErrorLog) {
     Logger::error(msg);
     string output = testing::internal::GetCapturedStdout();
 
-    EXPECT_EQ("<3> " + msg, output);
+    EXPECT_EQ("<3> " + msg + "\n", output);
 }
 
 TEST(LoggerTest, CriticalLog) {
@@ -54,5 +54,5 @@ TEST(LoggerTest, CriticalLog) {
     Logger::critical(msg);
     string output = testing::internal::GetCapturedStdout();
 
-    EXPECT_EQ("<2> " + msg, output);
+    EXPECT_EQ("<2> " + msg + "\n", output);
 }

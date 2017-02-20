@@ -34,7 +34,7 @@ SequenceItem SequenceParser::tokenToSequenceItem(string token) {
         /**
           The provided sequence is invalid
         **/
-        Logger::error("Invalid token=" + token + "\n");
+        Logger::error("Invalid token=" + token);
         throw SequenceParsingException("Invalid token=" + token);
     }
 }

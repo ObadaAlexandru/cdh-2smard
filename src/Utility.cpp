@@ -10,7 +10,7 @@ std::map<std::string, std::string> Utility::getCliArguments(int argc, const char
   CliParser cliParser;
   map<string, string> cliArguments;
   if(argc > 1) {
-    Logger::info("Command line arguments provided\n");
+    Logger::info("Command line arguments provided");
     cliArguments = cliParser.getArguments(argc, argv);
   }
   return cliArguments;

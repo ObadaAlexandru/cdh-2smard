@@ -3,6 +3,8 @@
 #include "Utility.h"
 #include "PinReadingException.h"
 #include "MissingPropertyException.h"
+#include "version.h"
+#include "Logger.h"
 
 #include <iostream>
 #include <string>
@@ -54,6 +56,7 @@ void printStatus(int pinId, string msg) {
 
 
 void run(int argc, const char* argv[]) {
+    Logger::info("Starting 2smard checker v." + string(VERSION) + "\n");
     if (!PinMapper::valid()) {
         throw PinReadingException("Failed loading pin map");
     }

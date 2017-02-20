@@ -30,5 +30,5 @@ map<string, string> CliParser::getArguments(int argc, const char* argv[]) {
 }
 
 void CliParser::printUsage() {
-    Logger::info("Usage: --config=<path> --half_1=<sequence> --half_2=<sequence>\n");
+    Logger::info("Usage: --config=<path> --half_1=<sequence> --half_2=<sequence>");
 }

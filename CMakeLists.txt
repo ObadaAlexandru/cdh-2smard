@@ -1,6 +1,11 @@
 cmake_minimum_required(VERSION 3.2)
 project(2smard)
 
+set(VERSION_MAJOR 1)
+set(VERSION_MINOR 0)
+
+include(version/version.cmake)
+
 # find needed libraries
 find_package(moveio REQUIRED)
 include_directories(${MOVEIO_INCLUDE_DIRS})
@@ -26,6 +31,7 @@ add_executable(2smard_activator
 	src/EPSCaller.cpp
 	src/Utility.cpp
 	src/ErrorCodeException.cpp
+	${version_file}
 )
 
 add_executable(2smard_checker
@@ -38,6 +44,7 @@ add_executable(2smard_checker
 	src/CliParser.cpp
 	src/Utility.cpp
 	src/ErrorCodeException.cpp
+	${version_file}
 )
 
 # Test

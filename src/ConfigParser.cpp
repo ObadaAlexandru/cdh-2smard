@@ -22,17 +22,17 @@ ConfigParser::ConfigParser(string configPath) {
     configFile.open(configPath);
     if(configFile.is_open()) {
         string line;
-        Logger::info("=================== PROPERTIES ============================\n");
+        Logger::info("=================== PROPERTIES ============================");
         while (getline(configFile, line)) {
             if(!(regex_match(line, commentRegex) || line.find_first_not_of(' ') == string::npos)) {
               vector<string> tokens = tokenizer.tokenize(line, "=");
               if(tokens.size() != 2) {
                   throw ConfigParsingException("Invalid config line: " + line);
               }
-              Logger::info("Property[" + tokens[0] + "] = " + tokens[1] + "\n");
+              Logger::info("Property[" + tokens[0] + "] = " + tokens[1]);
               properties[tokens[0]] = tokens[1];
             } else {
-              Logger::notice("Comment: " + line + "\n");
+              Logger::notice("Comment: " + line);
             }
         }
     }
@@ -41,11 +41,11 @@ ConfigParser::ConfigParser(string configPath) {
 
 std::pair<std::string, std::string> ConfigParser::getSequences() {
     if(properties.count(halfOneKey) != 1) {
-      Logger::info("Fallback to default sequence 1\n");
+      Logger::info("Fallback to default sequence 1");
       properties[halfOneKey] = defaultSequenceHalfOne;
     }
     if(properties.count(halfTwoKey) != 1) {
-      Logger::info("Fallback to default sequence 2\n");
+      Logger::info("Fallback to default sequence 2");
       properties[halfTwoKey] = defaultSequenceHalfTwo;
     }
     return make_pair (properties[halfOneKey], properties[halfTwoKey]);

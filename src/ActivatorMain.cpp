@@ -5,6 +5,7 @@
 #include "Utility.h"
 #include "Logger.h"
 #include "ErrorCodeException.h"
+#include "version.h"
 
 #include <string>
 #include <iostream>
@@ -17,9 +18,9 @@ using namespace std;
 #define DEFAULT_CONFIG_PATH "./config.cfg"
 
 void signalHandler(int signal) {
-		Logger::info("\n================== EXECUTION INTERRUPTED ==================\n");
-		Logger::info("Received signal = " + to_string(signal) + "\n");
-		Logger::info("2SMARD will be deactivated\n");
+		Logger::info("\n================== EXECUTION INTERRUPTED ==================");
+		Logger::info("Received signal = " + to_string(signal));
+		Logger::info("2SMARD will be deactivated");
 		SequenceRunner::stopRun();
 }
 
@@ -28,18 +29,19 @@ pair<list<SequenceItem>, list<SequenceItem>> getSequences(ConfigParser &configPa
 		pair<string, string> sequences = configParser.getSequences();
 
 		if(cliArguments.count(CliParser::halfOneKey) != 0) {
-			Logger::info("Override first half with = " + cliArguments.find(CliParser::halfOneKey)->second + "\n");
+			Logger::info("Override first half with = " + cliArguments.find(CliParser::halfOneKey)->second);
 			sequences.first = cliArguments.find(CliParser::halfOneKey)->second;
 		}
 
 		if(cliArguments.count(CliParser::halfTwoKey) != 0) {
-			Logger::info("Override second half with = " + cliArguments.find(CliParser::halfTwoKey)->second + "\n");
+			Logger::info("Override second half with = " + cliArguments.find(CliParser::halfTwoKey)->second);
 			sequences.second = cliArguments.find(CliParser::halfTwoKey)->second;
 		}
 		return make_pair(sequenceParser.getSequenceFromString(sequences.first), sequenceParser.getSequenceFromString(sequences.second));
 }
 
 void run(int argc, const char* argv[]) {
+		Logger::info("Starting 2smard activator v." + string(VERSION));
 		signal(SIGINT, signalHandler);
 		signal(SIGTERM, signalHandler);
 		map<string, string> cliArguments = Utility::getCliArguments(argc, argv);
@@ -57,7 +59,7 @@ int main(int argc, const char* argv[])
 			run(argc, argv);
 			return 0;
 		} catch(ErrorCodeException& exception) {
-			Logger::error(exception.getMessage() + "\n");
+			Logger::error(exception.getMessage());
 			return 1;
 		} catch(...) {
 			Logger::critical("2SMARD-005 : Unexpected error occured");
