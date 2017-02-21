@@ -20,6 +20,7 @@ public:
    * @param half identifier
    */
   EPSCaller(EPSCaller::HALF half);
+  ~EPSCaller();
   /**
    * Sends an activation signal via dbus
    */
@@ -28,14 +29,6 @@ public:
    * Sends a deactivation signal via dbus
    */
   bool deactivate();
-  /**
-   * Opens a dbus connection
-   */
-  bool open();
-  /**
-   * Closes dbus connection
-   */
-  void close();
 private:
   int getHalf(EPSCaller::HALF half);
   bool callDbusEPS(std::string method);

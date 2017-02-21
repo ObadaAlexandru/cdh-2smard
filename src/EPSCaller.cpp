@@ -15,16 +15,12 @@ using namespace std;
 
 EPSCaller::EPSCaller(EPSCaller::HALF half) {
     this->half = half;
-}
-
-bool EPSCaller::open() {
     int response = sd_bus_open_user(&bus);
     if (response < 0) {
           string msg = Logger::ERROR + " Failed to connect to system bus: %s\n";
           fprintf(stderr, msg.c_str(), strerror(-response));
           throw DbusException("Failed opening dbus connection");
     }
-    return true;
 }
 
 int EPSCaller::getHalf(EPSCaller::HALF half) {
@@ -77,6 +73,6 @@ bool EPSCaller::deactivate() {
     return callDbusEPS(deactivationMethodName);
 }
 
-void EPSCaller::close() {
-    sd_bus_unref(bus);
+EPSCaller::~EPSCaller() {
+    sd_bus_flush_close_unref(bus);
 }

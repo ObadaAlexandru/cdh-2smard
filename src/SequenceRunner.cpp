@@ -23,7 +23,6 @@ SequenceRunner::SequenceRunner(pair<list<SequenceItem> ,list<SequenceItem>> sequ
 void* runSequenceEPS(void *ptr) {
     SequenceRunner::RunnerData *data = (SequenceRunner::RunnerData*) ptr;
     EPSCaller epsCaller(data->half);
-    epsCaller.open();
     for(SequenceItem item : data->sequence) {
         auto start_time = std::chrono::high_resolution_clock::now();
         while (!SequenceRunner::isStop()) {
@@ -57,12 +56,10 @@ void* runSequenceEPS(void *ptr) {
         while(item.getPeriod() > chrono::duration_cast<chrono::seconds>(chrono::high_resolution_clock::now() - start_time).count()) {
           usleep(100000);
           if(SequenceRunner::isStop()) {
-            epsCaller.close();
             return NULL;
           }
         }
     }
-    epsCaller.close();
     return NULL;
 }
 
@@ -79,14 +76,10 @@ void SequenceRunner::tearDown() {
     EPSCaller callerHalfOne(EPSCaller::HALF_ONE);
     EPSCaller callerHalfTwo(EPSCaller::HALF_TWO);
     auto printFunc = [](int halfId) {Logger::info("Deactivating 2SMARD half " + to_string(halfId));};
-    callerHalfOne.open();
-    callerHalfTwo.open();
     printFunc(1);
     callerHalfOne.deactivate();
     printFunc(2);
     callerHalfTwo.deactivate();
-    callerHalfOne.close();
-    callerHalfTwo.close();
 }
 
 void SequenceRunner::run() {
