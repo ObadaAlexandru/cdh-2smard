@@ -2,7 +2,7 @@
 #define EPSCALLER_H
 
 #include <string>
-
+#include <cstdint>
 #include <systemd/sd-bus.h>
 /**
  * EPS dBus interface
@@ -30,7 +30,7 @@ public:
    */
   bool deactivate();
 private:
-  int getHalf(EPSCaller::HALF half);
+  std::uint16_t getHalf(EPSCaller::HALF half);
   bool callDbusEPS(std::string method);
   sd_bus *bus;
   EPSCaller::HALF half;

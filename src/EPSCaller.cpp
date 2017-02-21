@@ -8,7 +8,6 @@
 #include <systemd/sd-bus.h>
 #include <fstream>
 #include <string>
-
 #include <systemd/sd-bus.h>
 
 using namespace std;
@@ -23,7 +22,7 @@ EPSCaller::EPSCaller(EPSCaller::HALF half) {
     }
 }
 
-int EPSCaller::getHalf(EPSCaller::HALF half) {
+uint16_t EPSCaller::getHalf(EPSCaller::HALF half) {
     switch (half) {
       case HALF_ONE:
         return 1;
