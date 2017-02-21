@@ -64,7 +64,7 @@ public:
 private:
   Tokenizer tokenizer;
   std::map<std::string, std::string> properties;
-  const std::string defaultSequenceHalfOne = "A5s|I4000s|A4040s|I300s";
-  const std::string defaultSequenceHalfTwo = "A5s|I4000s|A4040s|I300s";
+  const std::string defaultSequenceHalfOne = "A5s|I10s|A3s";
+  const std::string defaultSequenceHalfTwo = "A5s|I5s|A10s";
 };
 #endif

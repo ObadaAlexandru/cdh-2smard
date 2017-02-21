@@ -26,7 +26,7 @@ void* runSequenceEPS(void *ptr) {
     epsCaller.open();
     for(SequenceItem item : data->sequence) {
         auto start_time = std::chrono::high_resolution_clock::now();
-        while (true && !SequenceRunner::isStop()) {
+        while (!SequenceRunner::isStop()) {
             pthread_mutex_lock(data->mutex);
             try {
             if(item.isActive()) {
