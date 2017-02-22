@@ -1,0 +1,14 @@
+[Unit]
+Description=2smard_activator
+After=eps.service
+Requires=eps.service
+
+[Service]
+Type=simple
+User=misc
+BusName=moveii.2smard_activator
+OnBootSec=30min
+ExecStart=/opt/cdh_2smard/2smard_activator
+
+[Install]
+WantedBy=LEOP.target
