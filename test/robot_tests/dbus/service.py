@@ -22,18 +22,18 @@ class Service(dbus.service.Object):
         self._loop.run()
         print "Service stopped"
 
-    @dbus.service.method("moveii.eps", in_signature='q', out_signature='b')
+    @dbus.service.method("moveii.eps", in_signature='s', out_signature='b')
     def switchOn(self, arg):
         print "2SMARD power activated"
-        print "Received " + str(int(arg))
-        self.append_result(str(int(arg)), 'A')
+        print "Received " + str(arg)
+        self.append_result(str(arg)[-1], 'A')
         return True
 
-    @dbus.service.method("moveii.eps", in_signature='q', out_signature='b')
+    @dbus.service.method("moveii.eps", in_signature='s', out_signature='b')
     def switchOff(self, arg):
         print "2SMARD power deactivated"
-        print "Received " + str(int(arg))
-        self.append_result(str(int(arg)), 'I')
+        print "Received " + str(arg)
+        self.append_result(str(arg)[-1], 'I')
         return True
 
     def append_result(self, half, state):

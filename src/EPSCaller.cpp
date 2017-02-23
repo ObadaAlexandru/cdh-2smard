@@ -22,12 +22,12 @@ EPSCaller::EPSCaller(EPSCaller::HALF half) {
     }
 }
 
-uint16_t EPSCaller::getHalf(EPSCaller::HALF half) {
+string EPSCaller::getHalf(EPSCaller::HALF half) {
     switch (half) {
       case HALF_ONE:
-        return 1;
+        return "2SMARD1";
       case HALF_TWO:
-        return 2;
+        return "2SMARD2";
       default:
         throw "Unknown half identifier";
     }
@@ -45,7 +45,7 @@ bool EPSCaller::callDbusEPS(string method) {
                              &error,
                              &message,
                              inputSignature.c_str(),
-                             getHalf(half));
+                             getHalf(half).c_str());
       if (response < 0) {
           string msg = Logger::ERROR + " 2SMARD %s failed: %s\n";
           fprintf(stderr, msg.c_str(), method.c_str(), error.message);

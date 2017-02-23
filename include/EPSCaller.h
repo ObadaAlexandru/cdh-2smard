@@ -2,7 +2,6 @@
 #define EPSCALLER_H
 
 #include <string>
-#include <cstdint>
 #include <systemd/sd-bus.h>
 /**
  * EPS dBus interface
@@ -30,7 +29,7 @@ public:
    */
   bool deactivate();
 private:
-  std::uint16_t getHalf(EPSCaller::HALF half);
+  std::string getHalf(EPSCaller::HALF half);
   bool callDbusEPS(std::string method);
   sd_bus *bus;
   EPSCaller::HALF half;
@@ -39,7 +38,7 @@ private:
   const std::string interfaceName = "moveii.eps";
   const std::string activationMethodName = "switchOn";
   const std::string deactivationMethodName = "switchOff";
-  const std::string inputSignature = "q";
+  const std::string inputSignature = "s";
   const std::string outputSignature = "b";
 };
 #endif

@@ -11,7 +11,7 @@ find_package(moveio REQUIRED)
 include_directories(${MOVEIO_INCLUDE_DIRS})
 
 # Flags for the compiler
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -pthread -Os -std=c++14 -Wall")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -pthread -std=c++14 -Wall")
 
 
 set(COMMON_INCLUDES ${PROJECT_SOURCE_DIR}/include)
