@@ -5,7 +5,7 @@ Requires=eps.service
 
 [Service]
 Type=simple
-User=misc
+#User=misc
 OnBootSec=30min
 ExecStart=/opt/cdh_2smard/2smard_activator
 
