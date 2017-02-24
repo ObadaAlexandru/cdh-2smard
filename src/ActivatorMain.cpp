@@ -15,7 +15,7 @@
 
 using namespace std;
 
-#define DEFAULT_CONFIG_PATH "./config.cfg"
+#define DEFAULT_CONFIG_PATH "/opt/cdh_2smard/config.cfg"
 
 void signalHandler(int signal) {
 		Logger::info("\n================== EXECUTION INTERRUPTED ==================");
