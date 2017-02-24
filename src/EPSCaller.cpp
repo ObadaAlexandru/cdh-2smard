@@ -14,7 +14,7 @@ using namespace std;
 
 EPSCaller::EPSCaller(EPSCaller::HALF half) {
     this->half = half;
-    int response = sd_bus_open_user(&bus);
+    int response = sd_bus_open_system(&bus);
     if (response < 0) {
           string msg = Logger::ERROR + " Failed to connect to system bus: %s\n";
           fprintf(stderr, msg.c_str(), strerror(-response));
