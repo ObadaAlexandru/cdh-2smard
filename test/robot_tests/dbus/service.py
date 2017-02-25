@@ -4,6 +4,8 @@ import dbus
 import dbus.service
 import dbus.mainloop.glib
 
+import random
+
 import gobject
 
 
@@ -27,14 +29,18 @@ class Service(dbus.service.Object):
         print "2SMARD power activated"
         print "Received " + str(arg)
         self.append_result(str(arg)[-1], 'A')
-        return True
+        response = random.choice([True, False])
+        print "Replying with " + str(response)
+        return response
 
     @dbus.service.method("moveii.eps", in_signature='s', out_signature='b')
     def switchOff(self, arg):
         print "2SMARD power deactivated"
         print "Received " + str(arg)
         self.append_result(str(arg)[-1], 'I')
-        return True
+        response = random.choice([True, False])
+        print "Replying with " + str(response)
+        return response
 
     def append_result(self, half, state):
         with open("result.txt", "a") as result_file:

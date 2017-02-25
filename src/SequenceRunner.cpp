@@ -20,48 +20,92 @@ SequenceRunner::SequenceRunner(pair<list<SequenceItem> ,list<SequenceItem>> sequ
     this->halfTwoSequence = sequences.second;
 }
 
+
 void* runSequenceEPS(void *ptr) {
     SequenceRunner::RunnerData *data = (SequenceRunner::RunnerData*) ptr;
     EPSCaller epsCaller(data->half);
     for(SequenceItem item : data->sequence) {
         auto start_time = std::chrono::high_resolution_clock::now();
-        while (!SequenceRunner::isStop()) {
-            pthread_mutex_lock(data->mutex);
-            try {
-            if(item.isActive()) {
-                Logger::info("Send active to half_" + to_string(data->half));
-                if(epsCaller.activate()) {
-                    break;
-                } else {
-                    Logger::error("EPS daemon didn't execute the activation command for half_" + to_string(data->half));
-                    usleep(100000);
-                    Logger::info("Retrying");
-                }
-            } else {
-                Logger::info("Send inactive to half_" + to_string(data->half));
-                if(epsCaller.deactivate()) {
-                    break;
-                } else {
-                    Logger::error("EPS daemon didn't execute the deactivation command for half_" + to_string(data->half));
-                    usleep(100000);
-                    Logger::info("Retrying");
-                }
-            }
-          } catch (const char* msg) {
-              Logger::error("Error while accessing EPS daemon. Sequence execution will stop");
-              SequenceRunner::stopRun();
-          }
+        if(item.isActive()) {
+            Logger::info("Send active to half_" + to_string(data->half));
+        } else {
+            Logger::info("Send inactive to half_" + to_string(data->half));
         }
-        pthread_mutex_unlock(data->mutex);
-        while(item.getPeriod() > chrono::duration_cast<chrono::seconds>(chrono::high_resolution_clock::now() - start_time).count()) {
-          usleep(100000);
-          if(SequenceRunner::isStop()) {
-            return NULL;
-          }
+        bool success = false;
+        while (item.getPeriod() > chrono::duration_cast<chrono::seconds>(chrono::high_resolution_clock::now() - start_time).count() || !success) {
+              pthread_mutex_lock(data->mutex);
+              try {
+                  if(item.isActive()) {
+                      if(!epsCaller.activate()) {
+                          Logger::error("EPS daemon didn't execute the activation command for half_" + to_string(data->half) + ". Resending!");
+                      } else {
+                          success = true;
+                      }
+                  } else {
+                      if(!epsCaller.deactivate()) {
+                          Logger::error("EPS daemon didn't execute the deactivation command for half_" + to_string(data->half) + ". Resending!");
+                      } else {
+                          success = true;
+                      }
+                  }
+            } catch (const char* msg) {
+                  Logger::error("Error while accessing EPS daemon. Sequence execution will stop");
+                  SequenceRunner::stopRun();
+            }
+            pthread_mutex_unlock(data->mutex);
+            if(SequenceRunner::isStop()) {
+                return NULL;
+            }
+            usleep(1000000);
         }
     }
     return NULL;
 }
+
+
+
+// void* runSequenceEPS(void *ptr) {
+//     SequenceRunner::RunnerData *data = (SequenceRunner::RunnerData*) ptr;
+//     EPSCaller epsCaller(data->half);
+//     for(SequenceItem item : data->sequence) {
+//         auto start_time = std::chrono::high_resolution_clock::now();
+//         while (!SequenceRunner::isStop()) {
+//             pthread_mutex_lock(data->mutex);
+//             try {
+//             if(item.isActive()) {
+//                 Logger::info("Send active to half_" + to_string(data->half));
+//                 if(epsCaller.activate()) {
+//                     break;
+//                 } else {
+//                     Logger::error("EPS daemon didn't execute the activation command for half_" + to_string(data->half));
+//                     usleep(100000);
+//                     Logger::info("Retrying");
+//                 }
+//             } else {
+//                 Logger::info("Send inactive to half_" + to_string(data->half));
+//                 if(epsCaller.deactivate()) {
+//                     break;
+//                 } else {
+//                     Logger::error("EPS daemon didn't execute the deactivation command for half_" + to_string(data->half));
+//                     usleep(100000);
+//                     Logger::info("Retrying");
+//                 }
+//             }
+//           } catch (const char* msg) {
+//               Logger::error("Error while accessing EPS daemon. Sequence execution will stop");
+//               SequenceRunner::stopRun();
+//           }
+//         }
+//         pthread_mutex_unlock(data->mutex);
+//         while(item.getPeriod() > chrono::duration_cast<chrono::seconds>(chrono::high_resolution_clock::now() - start_time).count()) {
+//           usleep(100000);
+//           if(SequenceRunner::isStop()) {
+//             return NULL;
+//           }
+//         }
+//     }
+//     return NULL;
+// }
 
 bool SequenceRunner::isStop() {
   return stop;
